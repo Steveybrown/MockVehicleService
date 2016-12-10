@@ -1,18 +1,18 @@
 import Vapor
 import HTTP
 
-final class CarModelController: ResourceRepresentable {
+final class MakesController: ResourceRepresentable {
     func index(request: Request) throws -> ResponseRepresentable {
-        return try CarModel.all().makeNode().converted(to: JSON.self)
+        return try Make.all().makeNode().converted(to: JSON.self)
     }
     
     func create(request: Request) throws -> ResponseRepresentable {
-        var carModel = try request.carModel()
-        try carModel.save()
-        return carModel
+        var make = try request.make()
+        try make.save()
+        return make
     }
     
-    func makeResource() -> Resource<CarModel> {
+    func makeResource() -> Resource<Make> {
         return Resource(
             index: index,
             store: create            
@@ -21,8 +21,8 @@ final class CarModelController: ResourceRepresentable {
 }
 
 extension Request {
-    func carModel() throws -> CarModel {
+    func make() throws -> Make {
         guard let json = json else { throw Abort.badRequest }
-        return try CarModel(node: json)
+        return try Make(node: json)
     }
 }

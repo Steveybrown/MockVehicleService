@@ -1,8 +1,17 @@
 import Vapor
 import VaporPostgreSQL
 
+/*
+ -- api endpoints
+ /makes/audi/models/
+ /users
+ /vehicles
+ */
+
+
 let drop = Droplet()
 drop.preparations.append(CarModel.self)
+drop.preparations.append(Make.self)
 
 do {
     try drop.addProvider(VaporPostgreSQL.Provider.self)
@@ -16,7 +25,12 @@ drop.get { req in
     ])
 }
 
-drop.resource("posts", PostController())
-drop.resource("makes", CarModelController())
+// drop.resource("posts", PostController())
+drop.resource("makes", MakesController())
+
+drop.get("vehicles") { req in
+    return JSON(Node(["vehicles": "1"]))
+}
+
 
 drop.run()
