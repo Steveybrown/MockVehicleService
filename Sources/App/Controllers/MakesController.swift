@@ -1,7 +1,17 @@
 import Vapor
 import HTTP
 
-final class MakesController: ResourceRepresentable {
+final class MakesController {
+    
+    func addRoutes(drop: Droplet) {
+        let route = drop.grouped("makes")
+        route.get(handler: index)
+        route.post(handler: create)
+        route.get(Make.self, handler: show)
+        route.delete(handler: clear)
+        route.get(Make.self, "models", handler: testing)
+    }
+    
     // http - get /makes
     func index(request: Request) throws -> ResponseRepresentable {
         return try Make.all().makeNode().converted(to: JSON.self)
@@ -26,17 +36,8 @@ final class MakesController: ResourceRepresentable {
         return try Make.all().makeJSON().converted(to: JSON.self)
     }
     
-    func testing(_ req: Request, _ name: String) -> ResponseRepresentable {
-        return "Hello, \(name)"
-    }
-    
-    func makeResource() -> Resource<Make> {
-        return Resource(
-            index: index,
-            store: create,
-            show: show,
-            clear: clear
-        )
+    func testing(req: Request, make: Make) -> ResponseRepresentable {
+        return "Hello"
     }
 }
 
